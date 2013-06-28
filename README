@@ -6,7 +6,7 @@ This one is like grep, but it works for fasta files.
 Install
 ---
 
-$ go get htruong/grep.fas
+$ go get github.com/htruong/grep.fas
 
 Usage
 ---
