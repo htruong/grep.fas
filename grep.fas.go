@@ -15,17 +15,22 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
 var printDescr = flag.Bool("d", true, "Prints description lines")
 var printSeq = flag.Bool("s", true, "Prints sequences lines")
 var printFirst = flag.Bool("1", false, "Match the first sequence only")
+var getNumberedSeq = flag.Bool("n", false, "Match the numbered sequences instead of matching strings, separated by commas (,)")
 
 func main() {
 
 	flag.Parse()
 
 	s := ""
+	numberedSeq := make(map[int]bool)
+	seqCounter := 0
 
 	// We need to check if we have enough params given
 	if flag.NArg() == 0 {
@@ -33,6 +38,17 @@ func main() {
 		os.Exit(-2)
 	} else {
 		s = flag.Args()[0]
+		if *getNumberedSeq {
+			numberedSeqStr := strings.Split(s, ",")
+			for _, val := range numberedSeqStr {
+				v, err := strconv.Atoi(val)
+				if err != nil {
+					log.Fatal("You have specified an invalid sequence #.")
+					os.Exit(-2)
+				}
+				numberedSeq[v] = true
+			}
+		}
 	}
 
 	// Now get the stdin pipe
@@ -54,18 +70,26 @@ func main() {
 				os.Exit(0)
 			}
 
-			matched, err := regexp.MatchString(s, scanner.Text())
+			seqMatched := false
 
-			if err != nil {
-				log.Fatal(err)
-				os.Exit(-1)
+			if !*getNumberedSeq {
+				matched, err := regexp.MatchString(s, scanner.Text())
+				if err != nil {
+					log.Fatal(err)
+					os.Exit(-1)
+				}
+				seqMatched = matched
+			} else {
+				seqMatched = numberedSeq[seqCounter]
 			}
 
-			prevMatched = matched
+			prevMatched = seqMatched
 
 			if prevMatched && (*printDescr) {
 				fmt.Println(scanner.Text())
 			}
+
+			seqCounter++
 
 		} else {
 			// This must be the sequence
