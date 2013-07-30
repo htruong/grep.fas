@@ -5,19 +5,20 @@ This one is like grep, but it works for fasta files.
 
 Install
 ---
-    $ go get github.com/htruong/grep.fas
+    $ go get -u github.com/htruong/grep.fas
 
 Usage
 ---
     Usage of grep.fas:
-    -1=false: Match the first sequence only
-    -d=true: Prints description lines
-    -s=true: Prints sequences lines
+      -1=false: Match the first sequence only
+      -d=true: Prints description lines
+      -n=false: Match the numbered sequences instead of matching strings, separated by commas (,)
+      -s=true: Prints sequences lines
 
 Examples
 ---
 
-    $ cat somefile.fas
+    $ cat myfile.fas
     >gi|5524211|gb|AAD44166.1| cytochrome b [Elephas maximus maximus]
     LCLYTHIGRNIYYGSYLYSETWNTGIMLLLITMATAFMGYVLPWGQMSFWGATVITNLFSAIPYIGTNLV
     EWIWGGFSVDKATLNRFFAFHFILPFTMVALAGVHLTFLHETGSNNPLGLTSDSDKIPFHPYYTIKDFLG
@@ -30,6 +31,8 @@ Examples
     WGATVITNLFSAIPYIGTDLVEWIWGGFSVDKATLNRFFALHFILPFTMIALAGVHLTFLHETGSNNPLG
     LTSDSDKIPFHPYYTIKDFLGLLILISLLLLLALLSPDMLGDPDNYMPADPLNTPLHIKPEWYFLFAYAI
     LRSVPNKLGGVLALLLSILILGMMPLLHTSKHRSMMLRPLSQVLFWTLATDLLMLTWIGSQPVEHPYIII
+    GQMASILYFSIILAFLPIAGMIENYLIK
+    >junk
     GQMASILYFSIILAFLPIAGMIENYLIK
 
     $ cat myfile.fas | grep.fas "Mammuthus"
@@ -49,4 +52,12 @@ Examples
     LRSVPNKLGGVLALLLSILILGMMPLLHTSKHRSMMLRPLSQVLFWTLATDLLMLTWIGSQPVEHPYIII
     GQMASILYFSIILAFLPIAGMIENYLIK
 
-
+    $ cat myfile.fas | grep.fas -n 1,3
+    >gi|5524211|gb|AAD44166.1| cytochrome b [Elephas maximus maximus]
+    LCLYTHIGRNIYYGSYLYSETWNTGIMLLLITMATAFMGYVLPWGQMSFWGATVITNLFSAIPYIGTNLV
+    EWIWGGFSVDKATLNRFFAFHFILPFTMVALAGVHLTFLHETGSNNPLGLTSDSDKIPFHPYYTIKDFLG
+    LLILILLLLLLALLSPDMLGDPDNHMPADPLNTPLHIKPEWYFLFAYAILRSVPNKLGGVLALFLSIVIL
+    GLMPFLHTSKHRSMMLRPLSQALFWTLTMDLLTLTWIGSQPVEYPYTIIGQMASILYFSIILAFLPIAGX
+    IENY
+    >junk
+    GQMASILYFSIILAFLPIAGMIENYLIK
